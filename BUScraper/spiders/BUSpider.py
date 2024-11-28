@@ -17,7 +17,9 @@ class BUSpider(scrapy.Spider):
     def __init__(self, diretorio, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.diretorio = diretorio
-        self.redis_client = redis.Redis(host='localhost', port=6379, db=0)
+        redis_host = os.getenv("REDIS_HOST", "localhost")
+        redis_port = int(os.getenv("REDIS_PORT", 6379))
+        self.redis_client = redis.Redis(redis_host, redis_port, db=0)
         print(self.redis_client.llen('aux_queue'))
 
         mongo_host = os.getenv("MONGO_HOST", "mongodb://localhost:27017/")

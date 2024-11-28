@@ -18,7 +18,9 @@ class ConfigSpider(scrapy.Spider):
         self.pleito = pleito
         self.ufs = ["ac", "al", "am", "ap", "ba", "ce", "df", "es", "go", "ma", "mg", "ms", "mt", "pa", "pb", "pe", "pi", "pr", "rj", "rn", "ro", "rr", "rs", "sc", "se", "sp", "to", "zz"]
 
-        self.redis_queue = redis.Redis(host='localhost', port=6379, db=0)
+        redis_host = os.getenv("REDIS_HOST", "localhost")
+        redis_port = int(os.getenv("REDIS_PORT", 6379))
+        self.redis_queue = redis.Redis(redis_host, redis_port, db=0)
         self.redis_queue.delete('aux_queue')
         
         avail_bind_addr = [addr.address
