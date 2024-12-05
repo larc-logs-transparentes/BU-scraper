@@ -3,12 +3,12 @@
 interface=wlp0s20f3                             # nome da interface
 ip=2804:1b3:a300:53e7:1c96:e802:9c6f:2d0c       # endereco IPv6 completo
 
-# remove dois ultimos caracteres
+# remove ultimos dois caracteres
 prefix=${ip%??}
 
 for i in {0..9} a b c d e f; do
     for j in {0..9} a b c d e f; do
-        # varia dois ultimos caracteres
+        # varia ultimos dois caracteres
         ip addr add noprefixroute $prefix$i$j/64 dev $interface
     done
 done
