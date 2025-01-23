@@ -1,7 +1,7 @@
 #!/bin/bash
 
 interface=wlp0s20f3                             # nome da interface
-ip=2804:1b3:a300:53e7:1c96:e802:9c6f:2d0c       # endereco IPv6 completo
+ip=2804:1b3:a300:c94e:5f0c:b1b3:8a5e:3954       # endereco IPv6 completo
 
 # remove ultimos dois caracteres
 prefix=${ip%??}

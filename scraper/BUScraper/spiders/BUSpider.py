@@ -75,15 +75,16 @@ class BUSpider(scrapy.Spider):
     # baixa os BUs
     def parse_bu(self, response):
         filename = response.url.split("/")[-1]
-        dir = self.diretorio + "/" + response.meta.get("uf") + "/"
+        dir = os.getenv("DADOS_DIR", "") + "/" + self.diretorio + "/" + response.meta.get("uf") + "/"
+        path = dir + filename
 
-        Path(f"{dir}/{filename}").write_bytes(response.body)
+        Path(path).write_bytes(response.body)
         # self.log(f"Arquivo salvo: {filename}")
 
         timestamp = response.meta.get("timestamp")
         status = response.meta.get("status")
 
-        self.colecao.insert_one({"arquivo": filename, "url": response.url, "timestamp": timestamp, "status": status})
+        self.colecao.insert_one({"arquivo": filename, "path": path, "url": response.url, "timestamp": timestamp, "status": status})
 
         # self.entradas_bu.append({"arquivo": filename, "url": response.url, "timestamp": timestamp, "status": status})
         # if len(self.entradas_bu) >= 500:

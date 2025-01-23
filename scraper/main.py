@@ -1,5 +1,6 @@
 import os
 import sys
+import argparse
 import subprocess
 
 from scrapy.crawler import CrawlerProcess
@@ -9,16 +10,27 @@ from BUScraper.spiders.ConfigSpider import ConfigSpider
 
 if __name__ == "__main__":
 
-    if len(sys.argv) < 2:
-        print('Uso: python3 baixar_BUs.py <diretorio_destino> [pleito=<id>]')
-        exit(1)
+    parser = argparse.ArgumentParser()
 
-    dir = sys.argv[1]
-    os.makedirs(dir, exist_ok=True)
+    parser.add_argument(
+        "--dir", 
+        type=str, 
+        help="O diretorio em que os BUs serao salvos"
+    )
 
-    pleito = None
-    if len(sys.argv) > 2 and sys.argv[2].startswith("pleito="):
-        pleito = sys.argv[2].split("=")[1]
+    parser.add_argument(
+        "--pleito", 
+        type=str, 
+        help="O pleito a ser baixado (ou \"todos\")"
+    )
+
+    args = parser.parse_args()
+
+    dir = args.dir
+    if not dir:
+        dir = input("Digite o nome do diretorio em que serao salvos os BUs: ")
+
+    pleito = args.pleito
 
     process = CrawlerProcess(settings={
         'CONCURRENT_REQUESTS': 50,
