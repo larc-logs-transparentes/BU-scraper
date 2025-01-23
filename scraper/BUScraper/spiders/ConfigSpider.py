@@ -75,7 +75,7 @@ class ConfigSpider(scrapy.Spider):
 
         for abrangencia in response.json()['abr']:
             uf = abrangencia['cd'].lower()
-            dir = os.getenv("DADOS_DIR", "") + "/" + self.diretorio + "/" + uf + "/"
+            dir = os.getenv("DADOS_DIR", ".") + "/" + self.diretorio + "/" + uf + "/"
             os.makedirs(dir, exist_ok=True)
 
             for municipio in abrangencia['mu']:

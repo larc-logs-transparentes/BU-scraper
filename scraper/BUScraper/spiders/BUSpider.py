@@ -35,17 +35,14 @@ class BUSpider(scrapy.Spider):
 
     def start_requests(self):
         while self.redis_client.llen('aux_queue') > 0:
-            # Pop URL from the Redis queue
             item = self.redis_client.rpop('aux_queue')
             if item:
-                # If a URL is found, send a request
                 item = json.loads(item)
                 url = item['url']
                 uf = item['uf']
                 yield scrapy.Request(url, callback=self.parse, meta={'uf': uf, 'bindaddress': (next(self.bind_addr_iter), 0)})
             else:
-                # Wait for a short duration before checking again
-                time.sleep(5)  # Adjust the duration as needed
+                time.sleep(5)
     
     # processa os arquivos auxiliares de secao e constroi a url para os BUs
     def parse(self, response):
@@ -75,7 +72,7 @@ class BUSpider(scrapy.Spider):
     # baixa os BUs
     def parse_bu(self, response):
         filename = response.url.split("/")[-1]
-        dir = os.getenv("DADOS_DIR", "") + "/" + self.diretorio + "/" + response.meta.get("uf") + "/"
+        dir = os.getenv("DADOS_DIR", ".") + "/" + self.diretorio + "/" + response.meta.get("uf") + "/"
         path = dir + filename
 
         Path(path).write_bytes(response.body)
