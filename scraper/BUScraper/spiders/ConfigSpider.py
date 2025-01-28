@@ -23,11 +23,13 @@ class ConfigSpider(scrapy.Spider):
         self.redis_queue = redis.Redis(redis_host, redis_port, db=0)
         self.redis_queue.delete('aux_queue')
         
-        avail_bind_addr = [addr.address
-                                for addr in itertools.chain(*psutil.net_if_addrs().values())
-                                if addr.family == socket.AF_INET6 and not addr.address.startswith('f') and addr.address != '::1']
-        self.log(f'Available bind address: {avail_bind_addr}')
-        self.bind_addr_iter = itertools.cycle(avail_bind_addr)
+        # PATCHED :(
+        # rotacao de enderecos IPv6
+        # avail_bind_addr = [addr.address
+        #                         for addr in itertools.chain(*psutil.net_if_addrs().values())
+        #                         if addr.family == socket.AF_INET6 and not addr.address.startswith('f') and addr.address != '::1']
+        # self.log(f'Available bind address: {avail_bind_addr}')
+        # self.bind_addr_iter = itertools.cycle(avail_bind_addr)
 
     # processa o arquivo de configuracao de eleicoes e constroi a url para os arquivos de configuracao de secao
     def parse(self, response):
@@ -48,7 +50,8 @@ class ConfigSpider(scrapy.Spider):
                     for uf in self.ufs:
                         filename = f"{uf}-p{pleito.zfill(6)}-cs.json"
                         url = self.urlBase + f"{pleito}/config/{uf}/{filename}"
-                        yield scrapy.Request(url=url, callback=self.parse_secoes_config, meta={'bindaddress': (next(self.bind_addr_iter), 0)})
+                        yield scrapy.Request(url=url, callback=self.parse_secoes_config)
+                        # yield scrapy.Request(url=url, callback=self.parse_secoes_config, meta={'bindaddress': (next(self.bind_addr_iter), 0)})
 
             elif escolha == "ajuda":
                 escolha = ""
@@ -63,7 +66,8 @@ class ConfigSpider(scrapy.Spider):
                 for uf in self.ufs:
                     filename = f"{uf}-p{pleito.zfill(6)}-cs.json"
                     url = self.urlBase + f"{pleito}/config/{uf}/{filename}"
-                    yield scrapy.Request(url=url, callback=self.parse_secoes_config, meta={'bindaddress': (next(self.bind_addr_iter), 0)})
+                    yield scrapy.Request(url=url, callback=self.parse_secoes_config)
+                    # yield scrapy.Request(url=url, callback=self.parse_secoes_config, meta={'bindaddress': (next(self.bind_addr_iter), 0)})
 
             elif escolha != "sair":
                 escolha = ""

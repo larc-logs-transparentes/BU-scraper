@@ -31,6 +31,8 @@ services:
       - ./scraper:/app
       - ./dados:/dados
     entrypoint: python main.py
+    stdin_open: true
+    tty: true
 
   mongosh:
     build:

@@ -32,22 +32,11 @@ if __name__ == "__main__":
 
     pleito = args.pleito
 
-    process = CrawlerProcess(settings={
-        'CONCURRENT_REQUESTS': 50,
-        'CONCURRENT_REQUESTS_PER_DOMAIN': 50,
-        'DOWNLOAD_DELAY': 0,
-        'AUTOTHROTTLE_ENABLED': False,
-        "DNS_RESOLVER": "resolver.ForceIPv6Resolver",
-        'LOG_LEVEL': 'INFO',
-        'REACTOR_THREADPOOL_MAXSIZE': 64,
-        'DOWNLOADER_HTTP2_ENABLED': True,
-    })
-    scraper = process.crawl(ConfigSpider, diretorio=dir, pleito=pleito)
-    process.start()
-    process.stop()
+    p = subprocess.Popen(['scrapy', 'crawl', 'ConfigSpider', '-a', f'diretorio={dir}', '-a', f'pleito={pleito}'])
+    p.wait()
 
     processes = []
-    for _ in range(8):
+    for _ in range(1):
         p = subprocess.Popen(['scrapy', 'crawl', 'BUSpider', '-a', f'diretorio={dir}'])
         processes.append(p)
 

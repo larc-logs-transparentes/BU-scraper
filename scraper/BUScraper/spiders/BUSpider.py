@@ -27,11 +27,13 @@ class BUSpider(scrapy.Spider):
         db = client["bu"]
         self.colecao = db[self.diretorio]
         
-        avail_bind_addr = [addr.address
-                                for addr in itertools.chain(*psutil.net_if_addrs().values())
-                                if addr.family == socket.AF_INET6 and not addr.address.startswith('f') and addr.address != '::1']
-        self.log(f'Available bind address: {avail_bind_addr}')
-        self.bind_addr_iter = itertools.cycle(avail_bind_addr)
+        # PATCHED :(
+        # rotacao de enderecos IPv6
+        # avail_bind_addr = [addr.address
+        #                         for addr in itertools.chain(*psutil.net_if_addrs().values())
+        #                         if addr.family == socket.AF_INET6 and not addr.address.startswith('f') and addr.address != '::1']
+        # self.log(f'Available bind address: {avail_bind_addr}')
+        # self.bind_addr_iter = itertools.cycle(avail_bind_addr)
 
     def start_requests(self):
         while self.redis_client.llen('aux_queue') > 0:
@@ -40,7 +42,8 @@ class BUSpider(scrapy.Spider):
                 item = json.loads(item)
                 url = item['url']
                 uf = item['uf']
-                yield scrapy.Request(url, callback=self.parse, meta={'uf': uf, 'bindaddress': (next(self.bind_addr_iter), 0)})
+                yield scrapy.Request(url, callback=self.parse, meta={'uf': uf})
+                # yield scrapy.Request(url, callback=self.parse, meta={'uf': uf, 'bindaddress': (next(self.bind_addr_iter), 0)})
             else:
                 time.sleep(5)
     
@@ -62,7 +65,8 @@ class BUSpider(scrapy.Spider):
                 if tpArquivo == "bu" or tpArquivo == "busa":
                     url = urlSecao + f"{cdHash}/{nmArquivo}"
                     uf = response.meta.get("uf")
-                    yield scrapy.Request(url=url, callback=self.parse_bu, meta={'uf': uf, 'timestamp': timestamp, 'status': status, 'bindaddress': (next(self.bind_addr_iter), 0)})
+                    yield scrapy.Request(url=url, callback=self.parse_bu, meta={'uf': uf, 'timestamp': timestamp, 'status': status})
+                    # yield scrapy.Request(url=url, callback=self.parse_bu, meta={'uf': uf, 'timestamp': timestamp, 'status': status, 'bindaddress': (next(self.bind_addr_iter), 0)})
 
                     # teste para o simulado, que nao gera os BUs
                     # dir = self.diretorio + "/"
