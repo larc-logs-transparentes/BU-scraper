@@ -5,31 +5,30 @@ services:
     ports:
       - "8090:27017"
     volumes:
-      - db:/data/db
+      - ./dados/db:/data/db
 
   redis:
     image: redis:latest
+    restart: always
     ports:
       - "8091:6379"
     volumes:
-      - redis_data:/data
-    restart: always
+      - redis:/data
 
   scraper:
     build:
       context: ./scraper
-    network_mode: host
     depends_on:
       - db
       - redis
     environment:
-      - MONGO_HOST=mongodb://localhost:8090
-      - REDIS_HOST=localhost
-      - REDIS_PORT=8091
-      - DADOS_DIR=/dados
+      - MONGO_HOST=mongodb://db:27017/
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DADOS_DIR=/dados/BUs
     volumes:
       - ./scraper:/app
-      - ./dados:/dados
+      - ./dados/BUs:/dados/BUs
     entrypoint: python main.py
     stdin_open: true
     tty: true
@@ -43,5 +42,4 @@ services:
     tty: true
 
 volumes:
-  db:
-  redis_data:
+  redis:
