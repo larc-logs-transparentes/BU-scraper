@@ -1,11 +1,11 @@
 services:
-  db:
-    image: mongo
+  mongo:
+    image: mongo:4.4.6
     restart: always
     ports:
       - "8090:27017"
     volumes:
-      - ./dados/db:/data/db
+      - mongo:/data/mongo
 
   redis:
     image: redis:latest
@@ -19,10 +19,10 @@ services:
     build:
       context: ./scraper
     depends_on:
-      - db
+      - mongo
       - redis
     environment:
-      - MONGO_HOST=mongodb://db:27017/
+      - MONGO_HOST=mongodb://mongo:27017/
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - DADOS_DIR=/dados/BUs
@@ -37,9 +37,10 @@ services:
     build:
       context: ./mongosh
     depends_on:
-      - db
+      - mongo
     stdin_open: true
     tty: true
 
 volumes:
+  mongo:
   redis:

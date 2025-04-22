@@ -1,8 +1,5 @@
 import os
 import scrapy
-import socket
-import itertools
-import psutil
 import redis
 import json
 

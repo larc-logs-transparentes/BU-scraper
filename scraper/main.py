@@ -1,12 +1,5 @@
-import os
-import sys
 import argparse
 import subprocess
-
-from scrapy.crawler import CrawlerProcess
-
-from BUScraper.spiders.ConfigSpider import ConfigSpider
-
 
 if __name__ == "__main__":
 
@@ -35,8 +28,11 @@ if __name__ == "__main__":
     p = subprocess.Popen(['scrapy', 'crawl', 'ConfigSpider', '-a', f'diretorio={dir}', '-a', f'pleito={pleito}'])
     p.wait()
 
+    # dispara n processos para consumir a fila de URLs de arquivos de configuracao
+    # inicialmente utilizado com rotatividade de ipv6 para download paralelo de BUs 
+    n_spiders = 1
     processes = []
-    for _ in range(1):
+    for _ in range(n_spiders):
         p = subprocess.Popen(['scrapy', 'crawl', 'BUSpider', '-a', f'diretorio={dir}'])
         processes.append(p)
 

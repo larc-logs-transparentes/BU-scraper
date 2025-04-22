@@ -1,3 +1,3 @@
-FROM mongo:6.0
+FROM mongo:5.0
 
-CMD ["mongosh", "mongodb://db:27017/bu"]
+CMD ["mongosh", "mongodb://mongo:27017/bu"]
