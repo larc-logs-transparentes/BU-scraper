@@ -15,6 +15,9 @@ e seguir as instruções.\
 Há também um script de comparação de BUs, que pode ser executado com o comando\
 `python3 comparar_BUs.py <diretorio_1> <diretorio_2>`
 
+### Aviso
+É comum receber erros 404 ao iniciar o scraper e selecionar o pleito, o que não impede seu funcionamento. Caso no pleito escolhido não tenha havido eleição em dado estado brasileiro, o servidor do TSE não possuirá o arquivo de configuração para esse, retornando erro. O scraper ignora esses erros e processa somente os arquivos que consegue acessar.
+
 
 ## Consultando banco de dados
 É possível consultar e filtrar os BUs baixados e logados no banco de dados (mongodb) por meio do terminal mongosh, com o comando\
