@@ -6,6 +6,7 @@ services:
       - "8090:27017"
     volumes:
       - mongo:/data/mongo
+      - ./dados:/dados
 
   redis:
     image: redis:latest
