@@ -68,7 +68,7 @@ class ConfigSpider(scrapy.Spider):
 
             elif escolha != "sair":
                 escolha = ""
-                print("Pleito invalido!")
+                print("Pleito nao encontrado!")
 
     # processa os arquivos de configuracao de secao e controi a url para os arquivos auxiliares de secao
     def parse_secoes_config(self, response):
@@ -76,7 +76,7 @@ class ConfigSpider(scrapy.Spider):
 
         for abrangencia in response.json()['abr']:
             uf = abrangencia['cd'].lower()
-            dir = os.getenv("DADOS_DIR", ".") + "/" + self.diretorio + "/" + uf + "/"
+            dir = os.getenv("DADOS_DIR", "./dados") + "/BUs/" + self.diretorio + "/" + uf + "/"
             os.makedirs(dir, exist_ok=True)
 
             for municipio in abrangencia['mu']:

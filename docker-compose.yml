@@ -1,11 +1,13 @@
 services:
   mongo:
-    image: mongo:4.4.6
+    build:
+      context: ./mongo
     restart: always
     ports:
       - "8090:27017"
     volumes:
-      - mongo:/data/mongo
+      - db:/data/db
+      - configdb:/data/configdb
       - ./dados:/dados
 
   redis:
@@ -26,10 +28,10 @@ services:
       - MONGO_HOST=mongodb://mongo:27017/
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - DADOS_DIR=/dados/BUs
+      - DADOS_DIR=/dados
     volumes:
       - ./scraper:/app
-      - ./dados/BUs:/dados/BUs
+      - ./dados:/dados
     entrypoint: python main.py
     stdin_open: true
     tty: true
@@ -41,7 +43,11 @@ services:
       - mongo
     stdin_open: true
     tty: true
+    volumes:
+      - db:/data/db
+      - configdb:/data/configdb
 
 volumes:
-  mongo:
+  db:
+  configdb:
   redis:

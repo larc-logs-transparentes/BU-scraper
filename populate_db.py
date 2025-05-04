@@ -42,7 +42,7 @@ def read_bu_or_busa_files_in_order():
 
     cursor = collection.find({}, {"path": 1, "_id": 0}).sort("timestamp", 1)
 
-    files = ["./" + doc["path"] for doc in cursor]
+    files = ["." + doc["path"] for doc in cursor]
 
     return files
 

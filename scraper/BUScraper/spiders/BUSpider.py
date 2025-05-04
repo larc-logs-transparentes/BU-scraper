@@ -73,7 +73,7 @@ class BUSpider(scrapy.Spider):
     # baixa os BUs
     def parse_bu(self, response):
         filename = response.url.split("/")[-1]
-        dir = os.getenv("DADOS_DIR", ".") + "/" + self.diretorio + "/" + response.meta.get("uf") + "/"
+        dir = os.getenv("DADOS_DIR", "./dados") + "/BUs/" + self.diretorio + "/" + response.meta.get("uf") + "/"
         path = dir + filename
 
         Path(path).write_bytes(response.body)
