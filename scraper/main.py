@@ -29,7 +29,8 @@ if __name__ == "__main__":
     p.wait()
 
     # dispara n processos para consumir a fila de URLs de arquivos de configuracao
-    # inicialmente utilizado com rotatividade de ipv6 para download paralelo de BUs 
+    # inicialmente utilizado com rotatividade de ipv6 para download paralelo de BUs
+    # porem, com a retirada do ipv6 dos servidores do TSE, o paralelismo nao e mais vantajoso
     n_spiders = 1
     processes = []
     for _ in range(n_spiders):

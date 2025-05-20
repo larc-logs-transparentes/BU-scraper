@@ -32,12 +32,18 @@ def read_bu_or_busa_files():
     return files
 
 # envia BUs na ordem em que foram recebidos pelo servidor do TSE
+# conecta com uma instancia de mongodb (configurada no docker-compose.yml por padrao na porta 8090)
+# portanto necessita que a instancia esteja rodando (`docker-compose up mongo`)
 def read_bu_or_busa_files_in_order():
-    nome_colecao = "primeiro_turno"
-
     client = pymongo.MongoClient("mongodb://localhost:8090/")
     db = client["bu"]
-    collection = db[nome_colecao]
+    collections = db.list_collection_names()
+    print(f"Colecoes disponiveis: {collections}")
+    escolha = input(f"Escolha uma colecao: ")
+    if escolha not in collections:
+        print("Colecao nao encontrada, nenhum BU enviado")
+        exit()
+    collection = db[escolha]
     collection.create_index([("timestamp", pymongo.ASCENDING)])
 
     cursor = collection.find({}, {"path": 1, "_id": 0}).sort("timestamp", 1)
